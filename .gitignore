@@ -1,0 +1,10 @@
+﻿*.exe
+*.pkg
+*.zip
+build/
+build_onefile/
+dist/
+output/
+output_fixed/
+game_env/
+__pycache__/

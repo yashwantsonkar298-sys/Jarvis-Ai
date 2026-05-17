@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="copyright" content="Copyright (C) 2026 Yashwant Sonkar and Project Team. Unauthorized copying, redistribution, or rebranding is prohibited.">
+  <meta name="author" content="Yashwant Sonkar and Project Team">
+  <title>JARVIS AI Vision Controller - Group Project Clone</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f1216;
+      --band: #151a20;
+      --panel: #1b222a;
+      --panel-2: #202a33;
+      --line: #34414f;
+      --text: #f3f7fb;
+      --muted: #a8b4c2;
+      --soft: #d6e0ea;
+      --green: #78d99a;
+      --cyan: #79d5f2;
+      --amber: #ffd166;
+      --red: #ff7575;
+      --pink: #ff8fc7;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        linear-gradient(115deg, rgba(121, 213, 242, .08), transparent 28%, transparent 64%, rgba(120, 217, 154, .07)),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 96px);
+      animation: pageDrift 18s linear infinite;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(15, 18, 22, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .topbar-inner {
+      width: min(1240px, calc(100vw - 32px));
+      min-height: 62px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #4b687c;
+      border-radius: 8px;
+      background: #14222b;
+      color: var(--cyan);
+      font-weight: 900;
+      box-shadow: 0 0 0 0 rgba(121, 213, 242, .22);
+      animation: markPulse 2.8s ease-in-out infinite;
+    }
+
+    .brand strong {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .nav a,
+    .link-button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--soft);
+      background: #161d24;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .nav a:hover,
+    .link-button:hover,
+    .nav a:focus-visible,
+    .link-button:focus-visible {
+      outline: none;
+      border-color: var(--cyan);
+      background: #1e2a34;
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(17, 23, 29, .96), rgba(17, 23, 29, 1)),
+        repeating-linear-gradient(0deg, rgba(121, 213, 242, .04) 0 1px, transparent 1px 34px);
+    }
+
+    .hero-inner {
+      width: min(1240px, calc(100vw - 32px));
+      min-height: calc(100vh - 86px);
+      margin: 0 auto;
+      padding: 44px 0 26px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(38px, 7vw, 82px);
+      line-height: 0.98;
+      letter-spacing: 0;
+      animation: riseIn .7s ease both;
+    }
+
+    .hero-copy p {
+      max-width: 700px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.55;
+      animation: riseIn .7s ease .08s both;
+    }
+
+    .student {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+      gap: 10px;
+    }
+
+    .student div {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--band);
+      animation: riseIn .65s ease both;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .student div:nth-child(1) { animation-delay: .12s; }
+    .student div:nth-child(2) { animation-delay: .18s; }
+    .student div:nth-child(3) { animation-delay: .24s; }
+    .student div:nth-child(4) { animation-delay: .30s; }
+    .student div:nth-child(5) { animation-delay: .36s; }
+
+    .student div:hover {
+      transform: translateY(-3px);
+      border-color: #5f7f95;
+      background: #1b252d;
+    }
+
+    .student label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .student strong {
+      display: block;
+      margin-top: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .student .roll {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .hero-actions {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stage {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 620px;
+      background: #131920;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28);
+      animation: stageIn .8s ease .12s both;
+    }
+
+    .stage::before {
+      content: "LIVE PRESENTATION CONSOLE";
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      z-index: 2;
+      color: rgba(243, 247, 251, .72);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .16em;
+    }
+
+    .scanner {
+      position: relative;
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(#1c2630 1px, transparent 1px),
+        linear-gradient(90deg, #1c2630 1px, transparent 1px),
+        #10161d;
+      background-size: 34px 34px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .scanner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(121, 213, 242, .18), transparent);
+      animation: sweep 3.8s linear infinite;
+    }
+
+    .scanner::after {
+      content: "";
+      position: absolute;
+      inset: 36px;
+      border: 1px solid rgba(121, 213, 242, .2);
+      border-radius: 8px;
+      animation: framePulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes sweep {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(100%); }
+    }
+
+    .face-visual {
+      position: relative;
+      width: min(300px, 68vw);
+      aspect-ratio: 1;
+      border: 2px solid var(--cyan);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--cyan);
+      box-shadow: inset 0 0 44px rgba(121, 213, 242, .08), 0 0 42px rgba(121, 213, 242, .12);
+      animation: biometricPulse 3s ease-in-out infinite;
+    }
+
+    .face-visual::before,
+    .face-visual::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(121, 213, 242, .65);
+      border-radius: 50%;
+    }
+
+    .face-visual::before { inset: 42px 68px 38px; }
+    .face-visual::after { inset: 105px 38px auto; height: 1px; border-radius: 0; }
+
+    .face-visual span {
+      margin-top: 180px;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .signal-stack {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      left: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      z-index: 1;
+    }
+
+    .signal {
+      border: 1px solid rgba(121, 213, 242, .24);
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: rgba(16, 22, 29, .8);
+      color: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .signal span {
+      display: block;
+      width: 100%;
+      height: 4px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green), var(--cyan), var(--amber));
+      transform-origin: left;
+      animation: signalLoad 2.8s ease-in-out infinite;
+    }
+
+    .signal:nth-child(2) span { animation-delay: .25s; }
+    .signal:nth-child(3) span { animation-delay: .5s; }
+    .signal:nth-child(4) span { animation-delay: .75s; }
+
+    .stage-panels {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .mini-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+      min-height: 104px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .mini-panel:hover {
+      transform: translateY(-2px);
+      border-color: #5f7f95;
+      background: #202a33;
+    }
+
+    .mini-panel label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .mini-panel strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 22px;
+      overflow-wrap: anywhere;
+    }
+
+    main {
+      width: min(1240px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    section {
+      scroll-margin-top: 82px;
+      margin-top: 30px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 42px);
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 760px;
+    }
+
+    .search {
+      width: min(360px, 100%);
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background: #121820;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 18px;
+      min-height: 142px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #5f7f95;
+      background: #202a33;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .card p {
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 10px 0 0;
+    }
+
+    .card .use {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #2f3b47;
+      color: var(--soft);
+      line-height: 1.45;
+    }
+
+    .card .tag {
+      display: inline-flex;
+      margin-bottom: 10px;
+      border: 1px solid #3d5263;
+      border-radius: 8px;
+      padding: 5px 8px;
+      color: var(--cyan);
+      background: #13212b;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 40px;
+      padding: 9px 12px;
+      background: #161d24;
+      color: var(--soft);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    button.active,
+    button:hover,
+    button:focus-visible {
+      outline: none;
+      border-color: var(--green);
+      background: #17251f;
+      color: #f8fff9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #303c49;
+      padding: 13px 14px;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    th {
+      color: var(--cyan);
+      background: #141c24;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    code {
+      border: 1px solid #40505f;
+      border-radius: 6px;
+      padding: 2px 6px;
+      background: #111820;
+      color: #f5d484;
+      font-size: .94em;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      counter-reset: step;
+    }
+
+    .step {
+      counter-increment: step;
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 44px 16px 16px;
+      background: var(--panel);
+      min-height: 148px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .step:hover {
+      transform: translateY(-3px);
+      border-color: #5f7f95;
+      background: #202a33;
+    }
+
+    .step::before {
+      content: counter(step, decimal-leading-zero);
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      color: var(--amber);
+      font-weight: 900;
+      letter-spacing: .12em;
+    }
+
+    .step strong { display: block; }
+    .step span { display: block; margin-top: 8px; color: var(--muted); line-height: 1.5; }
+
+    .routes {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .route {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+      text-decoration: none;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .route strong { display: block; margin-bottom: 8px; }
+    .route span { color: var(--muted); line-height: 1.45; }
+
+    .route:hover,
+    .route:focus-visible {
+      outline: none;
+      border-color: var(--cyan);
+      background: var(--panel-2);
+      transform: translateY(-3px);
+    }
+
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      color: var(--muted);
+      background: #121820;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      margin-top: 40px;
+      padding-top: 20px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @keyframes pageDrift {
+      from { background-position: 0 0, 0 0; }
+      to { background-position: 0 0, 192px 0; }
+    }
+
+    @keyframes markPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(121, 213, 242, .18); }
+      50% { box-shadow: 0 0 0 7px rgba(121, 213, 242, 0); }
+    }
+
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes stageIn {
+      from { opacity: 0; transform: translateY(20px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes framePulse {
+      0%, 100% { opacity: .45; transform: scale(1); }
+      50% { opacity: .85; transform: scale(1.015); }
+    }
+
+    @keyframes biometricPulse {
+      0%, 100% { transform: scale(1); border-color: var(--cyan); }
+      50% { transform: scale(1.025); border-color: var(--green); }
+    }
+
+    @keyframes signalLoad {
+      0%, 100% { transform: scaleX(.28); opacity: .68; }
+      50% { transform: scaleX(1); opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .stage { min-height: auto; }
+      .student { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid,
+      .grid.two,
+      .flow,
+      .routes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .topbar-inner { align-items: flex-start; flex-direction: column; padding: 12px 0; }
+      .nav { justify-content: flex-start; }
+    }
+
+    @media (max-width: 640px) {
+      .student,
+      .grid,
+      .grid.two,
+      .flow,
+      .routes,
+      .signal-stack,
+      .stage-panels { grid-template-columns: 1fr; }
+      .section-head { align-items: stretch; flex-direction: column; }
+      .hero-inner { min-height: auto; padding-top: 28px; }
+      th,
+      td { padding: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">J</div>
+        <div>
+          <strong>JARVIS AI Vision Controller</strong>
+          <span>Group project clone for hackathon presentation</span>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Project sections">
+        <a href="#team">Team</a>
+        <a href="#problems">Problems</a>
+        <a href="#features">Features</a>
+        <a href="#controls">Controls</a>
+        <a href="#voice">Voice</a>
+        <a href="#engines">Engines</a>
+        <a href="#demo">Demo</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <h1>JARVIS AI Vision Controller</h1>
+        <p>B.Tech First Year CSE-29 group project for touchless computer control using webcam-based hand tracking, Face ID, eye check, voice commands, local dashboard telemetry, Guardian SOS, and a real kiosk demo.</p>
+        <div class="student">
+          <div><label>Team Member 1</label><strong>Vanshika Yadav</strong><span class="roll">Roll No: 2503201001297</span></div>
+          <div><label>Team Member 2</label><strong>Yashwant Sonkar</strong><span class="roll">Roll No: 2503201001359</span></div>
+          <div><label>Team Member 3</label><strong>Suraj Prajapati</strong><span class="roll">Roll No: 2503201001201</span></div>
+          <div><label>Team Member 4</label><strong>Vishal Maurya</strong><span class="roll">Roll No: 2503201001324</span></div>
+          <div><label>Team Member 5</label><strong>Tarang Mittal</strong><span class="roll">Roll No: 2503201001231</span></div>
+        </div>
+        <div class="hero-actions">
+          <a class="link-button" href="/clone">Original Clone</a>
+          <a class="link-button" href="/dashboard">Dashboard</a>
+          <a class="link-button" href="/kiosk">Kiosk Demo</a>
+          <a class="link-button" href="/guardian">Guardian SOS</a>
+          <a class="link-button" href="#problems">Problems</a>
+        </div>
+      </div>
+      <div class="stage" aria-label="Project scanner visual">
+        <div class="scanner">
+          <div class="face-visual"><span>Biometric Gate</span></div>
+          <div class="signal-stack" aria-label="Presentation signals">
+            <div class="signal">Face ID<span></span></div>
+            <div class="signal">Eye Check<span></span></div>
+            <div class="signal">Gesture Lock<span></span></div>
+            <div class="signal">Voice Sync<span></span></div>
+          </div>
+        </div>
+        <div class="stage-panels">
+          <div class="mini-panel"><label>Status</label><strong id="liveStatus">Local clone ready</strong></div>
+          <div class="mini-panel"><label>Mode</label><strong id="liveMode">System locked</strong></div>
+          <div class="mini-panel"><label>FPS</label><strong id="liveFps">--</strong></div>
+          <div class="mini-panel"><label>Voice</label><strong id="liveVoice">Dashboard sync</strong></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="team">
+      <div class="section-head">
+        <div>
+          <h2>Project Team</h2>
+          <p>This group clone shows all team members in the submitted order.</p>
+        </div>
+      </div>
+      <div class="grid" id="teamGrid"></div>
+    </section>
+
+    <section id="problems">
+      <div class="section-head">
+        <div>
+          <h2>Problems We Are Solving</h2>
+          <p>The project focuses on these three real-world problem areas.</p>
+        </div>
+      </div>
+      <div class="grid" id="problemGrid"></div>
+    </section>
+
+    <section id="links">
+      <div class="section-head">
+        <div>
+          <h2>Presentation Links</h2>
+          <p>These are the local links used during the hackathon demo. The clone page is the new A-to-Z presentation link.</p>
+        </div>
+      </div>
+      <div class="routes" id="routes"></div>
+    </section>
+
+    <section id="features">
+      <div class="section-head">
+        <div>
+          <h2>Feature Matrix</h2>
+          <p>All features listed here come from the current project only.</p>
+        </div>
+        <input class="search" id="featureSearch" type="search" placeholder="Search features">
+      </div>
+      <div class="grid" id="featureGrid"></div>
+    </section>
+
+    <section id="controls">
+      <div class="section-head">
+        <div>
+          <h2>Gesture Controls</h2>
+          <p>Mode-wise controls for unlock, media, navigation, and touch operation.</p>
+        </div>
+      </div>
+      <div class="tabs" id="modeTabs"></div>
+      <div id="modeTable"></div>
+    </section>
+
+    <section id="voice">
+      <div class="section-head">
+        <div>
+          <h2>Voice Commands</h2>
+          <p>Hindi-English friendly commands handled by the voice assistant.</p>
+        </div>
+      </div>
+      <div class="tabs" id="voiceTabs"></div>
+      <div id="voiceTable"></div>
+    </section>
+
+    <section id="engines">
+      <div class="section-head">
+        <div>
+          <h2>Software And Engines</h2>
+          <p>Every tool listed here is used by the project code or dependency stack.</p>
+        </div>
+      </div>
+      <div class="grid two" id="engineGrid"></div>
+    </section>
+
+    <section id="files">
+      <div class="section-head">
+        <div>
+          <h2>Project Files</h2>
+          <p>Core files and folders included in the project.</p>
+        </div>
+      </div>
+      <div id="fileTable"></div>
+    </section>
+
+    <section id="demo">
+      <div class="section-head">
+        <div>
+          <h2>Hackathon Demo Flow</h2>
+          <p>Follow this sequence to present the project clearly.</p>
+        </div>
+      </div>
+      <div class="flow" id="demoFlow"></div>
+    </section>
+
+    <section id="troubleshooting">
+      <div class="section-head">
+        <div>
+          <h2>Troubleshooting</h2>
+          <p>Common demo issues and direct fixes.</p>
+        </div>
+      </div>
+      <div id="troubleTable"></div>
+    </section>
+
+    <section id="tested">
+      <div class="section-head">
+        <div>
+          <h2>Current Tested Status</h2>
+          <p>Local smoke checks already performed on this project.</p>
+        </div>
+      </div>
+      <div class="grid" id="testGrid"></div>
+    </section>
+
+    <footer>
+      This clone is a presentation view of the existing JARVIS AI Vision Controller project. It does not claim features outside the project code and README.<br>
+      <strong>Copyright (C) 2026 Yashwant Sonkar and Project Team.</strong> Unauthorized copying, redistribution, or rebranding is prohibited.
+    </footer>
+  </main>
+
+  <script>
+    const project = {
+      routes: [
+        ["Group Project Clone", "/group-clone", "Updated team clone with members and problem statements."],
+        ["Project Clone", "/clone", "A-to-Z hackathon presentation page."],
+        ["Live Dashboard", "/dashboard", "Mode, FPS, lock state, gesture, voice, and SOS telemetry."],
+        ["Mode API", "/api/mode?mode=touch", "Server mode-control endpoint for media, navigation, or touch."],
+        ["Touchless Kiosk", "/kiosk", "Hospital, classroom, smart home, emergency, and information desk demo."],
+        ["Guardian SOS", "/guardian", "Local emergency command center page."]
+      ],
+      team: [
+        ["Team Member 1", "Vanshika Yadav", "2503201001297"],
+        ["Team Member 2", "Yashwant Sonkar", "2503201001359"],
+        ["Team Member 3", "Suraj Prajapati", "2503201001201"],
+        ["Team Member 4", "Vishal Maurya", "2503201001324"],
+        ["Team Member 5", "Tarang Mittal", "2503201001231"]
+      ],
+      problems: [
+        ["Hands-free computer access", "Keyboard and mouse control is difficult in touchless, accessibility, presentation, and hygiene-sensitive situations.", "The project uses webcam hand tracking, air click, hover tap, and gesture modes to control the computer without touching devices."],
+        ["Secure gesture-control unlock", "A vision controller should not let anyone near the camera start controlling the system.", "The project adds a biometric gate with Face ID, eye check, and a secret index-plus-pinky hand sign before controls activate."],
+        ["Touchless public-service interaction", "Public kiosk screens and emergency workflows need fast interaction without physical contact.", "The project includes a touchless kiosk demo, live dashboard telemetry, and Guardian SOS command center for safer demo workflows."]
+      ],
+      files: [
+        ["app.py", "Main AI vision controller app with camera, hand tracking, Face ID, voice assistant, dashboard, and gesture control."],
+        ["project_clone.html", "This A-to-Z presentation clone page."],
+        ["project_clone_group.html", "Group project clone page with team members and problem statements."],
+        ["kiosk_demo.html", "Touchless public service kiosk demo page."],
+        ["kiosk_server.py", "Standalone local server for the kiosk and clone pages."],
+        ["COPYRIGHT.md", "Ownership and copyright notice for the project."],
+        ["requirements.txt", "Python dependency list."],
+        ["known_faces/", "Local Face ID model/encoding storage."],
+        ["captures/", "Auto-created folder for screenshots and demo captures."],
+        ["start_kiosk.bat", "Windows shortcut script for the standalone server."]
+      ],
+      features: [
+        ["Biometric gate", "Hides raw camera behind a scanner screen until identity is verified.", "Start app, face camera, then show secret hand sign."],
+        ["Face ID", "Verifies the authorized user before gestures control the system.", "Press E to enroll if needed; local profile loads from known_faces/."],
+        ["Eye check", "Requires visible eyes before enrollment or unlock.", "Keep face clearly visible with good lighting."],
+        ["Secret hand sign", "Second factor after Face ID.", "Raise index and pinky, fold middle and ring."],
+        ["MediaPipe hand tracking", "Detects 21 hand landmarks in real time.", "Keep one hand clearly visible inside the camera frame."],
+        ["Adaptive pinch intelligence", "Scales pinch threshold from palm size and hand distance.", "No manual setup; move naturally closer or farther."],
+        ["Smooth cursor control", "Maps index finger to mouse coordinates with smoothing.", "Use Touch Mode and move index finger."],
+        ["Stable keyboard mode control", "Prevents accidental mode changes when the hand is too close to the camera.", "Press 1, 2, or 3 to select modes directly."],
+        ["Media Mode", "Controls system volume.", "Middle volume up, ring volume down."],
+        ["Navigation Mode", "Controls slide navigation and finger-based scrolling.", "Move index left/right to change slides; use middle/ring for scroll."],
+        ["Touch Mode", "Controls browser buttons, kiosk interactions, slide movement, and pinch shortcuts.", "Move index cursor, swipe left/right to slide, use hover tap or strict thumb pinches."],
+        ["Touch pinch shortcuts", "Uses strict thumb-finger contact for video and tab actions.", "Thumb+index toggles play/pause; thumb+middle closes the current YouTube/browser tab."],
+        ["Virtual touch", "Taps target after steady hover.", "Hold index steady over target for about 0.75 seconds."],
+        ["Voice assistant", "Opens websites/apps, searches, controls tabs, types, screenshots, and changes modes.", "Speak commands like youtube open karo or touch mode."],
+        ["Voice feedback", "Speaks unlock and mode events.", "Runs through Windows SAPI, pyttsx3, or PowerShell fallback."],
+        ["Guardian SOS", "Demo emergency workflow with screenshot, dashboard alert, and command center.", "Say guardian sos, emergency, or help me; clear with clear sos."],
+        ["Live dashboard", "Shows live app telemetry in browser.", "Open the dashboard URL printed in terminal."],
+        ["Touchless kiosk demo", "Real public-service demo surface.", "Open /kiosk and operate buttons using Touch or Navigation Mode."],
+        ["Demo capture", "Saves current HUD/camera frame.", "Press S; files save in captures/."],
+        ["Safe shutdown", "Releases camera and closes windows.", "Press Q, Esc, or close the OpenCV window."]
+      ],
+      modes: {
+        "Global": [
+          ["Face + eye + index/pinky sign", "Unlock system"],
+          ["1 / 2 / 3 keys", "Select Media / Navigation / Touch Mode directly"],
+          ["Voice: media, navigation, touch", "Select the spoken mode directly"],
+          ["Pinky mode switch", "Disabled by default for hackathon stability"],
+          ["Index movement in Touch Mode", "Move mouse cursor"],
+          ["Q or Esc", "Exit app"]
+        ],
+        "Media": [
+          ["Middle finger only", "Volume up"],
+          ["Ring finger only", "Volume down"],
+          ["Thumb + middle pinch", "Volume up fallback"],
+          ["Thumb + ring pinch", "Volume down fallback"]
+        ],
+        "Navigation": [
+          ["Index moves left", "Previous slide / left arrow"],
+          ["Index moves right", "Next slide / right arrow"],
+          ["Middle finger only", "Scroll up"],
+          ["Ring finger only", "Scroll down"]
+        ],
+        "Touch": [
+          ["Index movement", "Move cursor"],
+          ["Index swipe left/right", "Previous/next slide or left/right arrow"],
+          ["Steady index hover", "Virtual touch tap"],
+          ["Thumb + index pinch", "Video play / pause"],
+          ["Thumb + middle pinch", "Close current YouTube/browser tab"]
+        ],
+        "Keyboard": [
+          ["1", "Select Media Mode"],
+          ["2", "Select Navigation Mode"],
+          ["3", "Select Touch Mode"],
+          ["S", "Save demo screenshot/HUD frame"],
+          ["E", "Enroll or re-enroll Face ID"],
+          ["L", "Relock security system"],
+          ["N", "Cycle to next mode manually"],
+          ["F", "Toggle fullscreen scanner"],
+          ["M", "Minimize scanner"],
+          ["+ / =", "Increase scanner window size"],
+          ["- / _", "Decrease scanner window size"],
+          ["R", "Restore scanner size"],
+          ["Q or Esc", "Exit safely"]
+        ]
+      },
+      voice: {
+        "Web/Search": [
+          ["youtube open karo", "Open YouTube"],
+          ["youtube par lo-fi music search karo", "Search YouTube"],
+          ["arijit song chalao", "Search YouTube for requested song or music"],
+          ["lo-fi music bajao", "Search YouTube for requested music"],
+          ["search python tutorial", "Search Google"],
+          ["mujhe weather today search karna hai", "Search Google"],
+          ["gmail open karo", "Open Gmail"],
+          ["google open karo", "Open Google"],
+          ["github open karo", "Open GitHub"],
+          ["whatsapp open karo", "Open WhatsApp Web"],
+          ["chatgpt open karo", "Open ChatGPT"]
+        ],
+        "Apps": [
+          ["notepad open karo", "Open Notepad"],
+          ["calculator open karo", "Open Calculator"],
+          ["paint open karo", "Open Paint"],
+          ["camera open karo", "Open Windows Camera"],
+          ["settings open karo", "Open Windows Settings"],
+          ["explorer open karo", "Open File Explorer"],
+          ["cmd open karo", "Open Command Prompt"],
+          ["powershell open karo", "Open PowerShell"],
+          ["chrome open karo", "Open Chrome if installed"],
+          ["edge open karo", "Open Microsoft Edge"],
+          ["word/excel/powerpoint open karo", "Open Microsoft Office apps if installed"],
+          ["vs code open karo", "Open Visual Studio Code if installed"],
+          ["spotify/vlc/zoom/teams/discord/obs open karo", "Open installed supported apps"]
+        ],
+        "Keyboard": [
+          ["volume up / awaz badhao", "System volume up"],
+          ["volume down / awaz kam", "System volume down"],
+          ["mute", "Toggle mute"],
+          ["play / pause", "Toggle playback"],
+          ["ye video chalao", "Open selected/current video or result"],
+          ["selected result kholo", "Open selected result"],
+          ["new tab / close tab", "Browser tab control"],
+          ["next tab / previous tab", "Switch browser tabs"],
+          ["back jao / piche jao", "Browser back"],
+          ["forward jao / aage jao", "Browser forward"],
+          ["refresh / reload", "Reload page"],
+          ["search bar / address bar", "Focus browser search bar"],
+          ["scroll up / scroll down", "Page scroll"],
+          ["slide left / slide right", "Arrow key navigation"],
+          ["screenshot", "Save screenshot"],
+          ["type hello world", "Type spoken text into active field"]
+        ],
+        "Modes/SOS": [
+          ["media", "Switch to Media Mode"],
+          ["media mode", "Switch to Media Mode"],
+          ["navigation / nav", "Switch to Navigation Mode"],
+          ["navigation mode", "Switch to Navigation Mode"],
+          ["touch", "Switch to Touch Mode"],
+          ["touch mode", "Switch to Touch Mode"],
+          ["guardian sos / emergency / help me", "Activate Guardian SOS"],
+          ["clear sos / cancel sos / stop sos", "Clear Guardian SOS"]
+        ]
+      },
+      engines: [
+        ["Python 3.11", "Entire project", "Connects camera, AI models, OS input, voice, and local web server."],
+        ["OpenCV", "Camera, image processing, HUD, Face ID fallback", "Reads frames, draws HUD/scanner, detects face/eyes, and supports LBPH Face Recognizer."],
+        ["OpenCV Contrib Face Recognizer", "Face ID fallback", "Trains and loads the local LBPH authorized-user model."],
+        ["MediaPipe Hands", "Hand tracking", "Detects 21 landmarks for finger states, pinches, movement, and secret hand sign."],
+        ["NumPy", "Math and coordinate processing", "Handles interpolation, clipping, thresholds, hand scale, and face labels."],
+        ["PyAutoGUI", "OS control", "Moves mouse, clicks, scrolls, presses keys, types text, and saves screenshots."],
+        ["SpeechRecognition", "Speech-to-text", "Uses Google recognition with en-IN language."],
+        ["sounddevice", "Microphone capture", "Captures raw mic audio and prefers noise-cancelling virtual microphones."],
+        ["pyttsx3", "Voice feedback fallback", "Speaks status messages if direct Windows SAPI is unavailable."],
+        ["pywin32 / Windows SAPI", "Voice feedback primary path", "Uses SAPI.SpVoice for Windows text-to-speech."],
+        ["PowerShell Speech", "Voice feedback final fallback", "Uses .NET System.Speech through PowerShell."],
+        ["Protobuf", "MediaPipe dependency", "Helps MediaPipe handle model/config data internally."],
+        ["Python http.server", "Dashboard and clone server", "Serves dashboard, clone, kiosk, Guardian page, and JSON telemetry."],
+        ["HTML/CSS/JavaScript", "Dashboard, kiosk, clone UI", "Builds responsive pages, CSS Grid layouts, and interactive project data rendering."]
+      ],
+      demo: [
+        ["Start app", "Run python app.py and open the scanner window."],
+        ["Open clone", "Use /group-clone as the team presentation link."],
+        ["Show dashboard", "Open / and show locked telemetry."],
+        ["Unlock", "Face camera, pass eye check, show index+pinky hand sign."],
+        ["Modes", "Use keys 1-3 or voice commands such as touch and media to switch modes."],
+        ["Kiosk", "Open /kiosk and operate buttons in Touch or Navigation Mode."],
+        ["Voice", "Say youtube open karo or search python tutorial."],
+        ["Guardian", "Say guardian sos, show /guardian, then clear sos."]
+      ],
+      tests: [
+        ["Syntax compile", "app.py and kiosk_server.py compiled successfully."],
+        ["Dependency check", "pip check found no broken requirements."],
+        ["Core imports", "OpenCV, MediaPipe, PyAutoGUI, NumPy, speech, mic, and Windows voice imports passed."],
+        ["Webcam", "Camera opened and returned a 640x480 frame."],
+        ["Dashboard", "Dashboard endpoint returned HTTP 200 in full app and standalone presentation mode."],
+        ["Kiosk", "Kiosk endpoint returned HTTP 200."],
+        ["Guardian", "Guardian endpoint returned HTTP 200."],
+        ["Telemetry", "Status API returns presentation telemetry in standalone mode and live telemetry in full app mode."]
+      ],
+      trouble: [
+        ["Webcam not found", "Close other camera apps, check permissions, reconnect webcam, restart app."],
+        ["Face ID not verifying", "Improve lighting, face camera directly, press E to re-enroll."],
+        ["Eye check failing", "Keep eyes visible and improve lighting."],
+        ["Gesture not detected", "Keep one hand in frame with fingers clearly separated."],
+        ["All gesture nodes activate together", "Move your hand back from the camera. Close-hand actions are blocked and gesture mode switching is disabled."],
+        ["Voice not listening", "Check Windows microphone permissions and dashboard Voice Mic panel."],
+        ["Voice commands fail", "Check internet connection for Google recognition."],
+        ["App launch fails", "Make sure app is installed or has a Start Menu shortcut."],
+        ["Dashboard not opening", "Check terminal for actual port if 8765 is busy."]
+      ]
+    };
+
+    const html = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[char]));
+
+    function table(headers, rows) {
+      return `<table><thead><tr>${headers.map(h => `<th>${html(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${html(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+    }
+
+    function renderCards(id, rows, kind = "feature") {
+      const target = document.getElementById(id);
+      if (!rows.length) {
+        target.innerHTML = `<div class="empty">No matching project details found.</div>`;
+        return;
+      }
+      target.innerHTML = rows.map(row => {
+        if (kind === "engine") {
+          return `<article class="card"><span class="tag">${html(row[1])}</span><h3>${html(row[0])}</h3><p>${html(row[2])}</p></article>`;
+        }
+        if (kind === "team") {
+          return `<article class="card"><span class="tag">${html(row[0])}</span><h3>${html(row[1])}</h3><p>Roll No: ${html(row[2])}</p></article>`;
+        }
+        if (kind === "problem") {
+          return `<article class="card"><h3>${html(row[0])}</h3><p>${html(row[1])}</p><div class="use">${html(row[2])}</div></article>`;
+        }
+        if (kind === "test") {
+          return `<article class="card"><h3>${html(row[0])}</h3><p>${html(row[1])}</p></article>`;
+        }
+        return `<article class="card"><h3>${html(row[0])}</h3><p>${html(row[1])}</p><div class="use">${html(row[2])}</div></article>`;
+      }).join("");
+    }
+
+    function renderRoutes() {
+      document.getElementById("routes").innerHTML = project.routes.map(([name, href, desc]) =>
+        `<a class="route" href="${html(href)}"><strong>${html(name)}</strong><span>${html(desc)}</span></a>`
+      ).join("");
+    }
+
+    function renderFileTable() {
+      document.getElementById("fileTable").innerHTML = table(["File or folder", "Purpose"], project.files);
+    }
+
+    function renderTabTable(tabId, contentId, data, headers) {
+      const names = Object.keys(data);
+      const tabRoot = document.getElementById(tabId);
+      const content = document.getElementById(contentId);
+      let active = names[0];
+
+      function paint() {
+        tabRoot.innerHTML = names.map(name =>
+          `<button type="button" class="${name === active ? "active" : ""}" data-tab="${html(name)}">${html(name)}</button>`
+        ).join("");
+        content.innerHTML = table(headers, data[active]);
+        tabRoot.querySelectorAll("button").forEach(button => {
+          button.addEventListener("click", () => {
+            active = button.dataset.tab;
+            paint();
+          });
+        });
+      }
+
+      paint();
+    }
+
+    function renderDemoFlow() {
+      document.getElementById("demoFlow").innerHTML = project.demo.map(([title, detail]) =>
+        `<div class="step"><strong>${html(title)}</strong><span>${html(detail)}</span></div>`
+      ).join("");
+    }
+
+    function renderTroubleTable() {
+      document.getElementById("troubleTable").innerHTML = table(["Problem", "Fix"], project.trouble);
+    }
+
+    function connectTelemetry() {
+      const status = document.getElementById("liveStatus");
+      const mode = document.getElementById("liveMode");
+      const fps = document.getElementById("liveFps");
+      const voice = document.getElementById("liveVoice");
+
+      async function refresh() {
+        try {
+          const response = await fetch("/api/status", { cache: "no-store" });
+          if (!response.ok) return;
+          const data = await response.json();
+          status.textContent = data.status || "Online";
+          mode.textContent = data.mode || "Unknown";
+          fps.textContent = String(data.fps ?? "--");
+          voice.textContent = data.voice_assistant || "Listening";
+        } catch (error) {
+          status.textContent = "Clone ready";
+          mode.textContent = "Open app.py for live sync";
+        }
+      }
+
+      refresh();
+      setInterval(refresh, 1200);
+    }
+
+    renderRoutes();
+    renderCards("teamGrid", project.team, "team");
+    renderCards("problemGrid", project.problems, "problem");
+    renderCards("featureGrid", project.features);
+    renderCards("engineGrid", project.engines, "engine");
+    renderCards("testGrid", project.tests, "test");
+    renderFileTable();
+    renderTabTable("modeTabs", "modeTable", project.modes, ["Gesture or key", "Action"]);
+    renderTabTable("voiceTabs", "voiceTable", project.voice, ["Command", "Action"]);
+    renderDemoFlow();
+    renderTroubleTable();
+    connectTelemetry();
+
+    document.getElementById("featureSearch").addEventListener("input", (event) => {
+      const query = event.target.value.trim().toLowerCase();
+      const rows = project.features.filter(row => row.join(" ").toLowerCase().includes(query));
+      renderCards("featureGrid", rows);
+    });
+  </script>
+</body>
+</html>

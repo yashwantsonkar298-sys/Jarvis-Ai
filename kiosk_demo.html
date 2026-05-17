@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="copyright" content="Copyright (C) 2026 Yashwant Sonkar and Project Team. Unauthorized copying, redistribution, or rebranding is prohibited.">
+  <meta name="author" content="Yashwant Sonkar and Project Team">
+  <title>Touchless Public Service Kiosk</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101316;
+      --panel: #171c22;
+      --panel-2: #1d242c;
+      --line: #2e3945;
+      --text: #f2f6fb;
+      --muted: #a9b4c2;
+      --green: #72d99f;
+      --cyan: #7dd3fc;
+      --red: #ff7171;
+      --yellow: #ffd36a;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 34px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 46px);
+      letter-spacing: 0;
+    }
+
+    .tagline {
+      margin-top: 8px;
+      color: var(--muted);
+      max-width: 760px;
+      line-height: 1.5;
+    }
+
+    .status {
+      min-width: 230px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .status strong {
+      display: block;
+      font-size: 24px;
+      margin-top: 6px;
+      color: var(--green);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 8px;
+      min-height: 76px;
+      padding: 14px 16px;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+      text-align: left;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+
+    button:hover,
+    button:focus-visible {
+      outline: none;
+      transform: translateY(-1px);
+      border-color: var(--cyan);
+      background: #1e2933;
+    }
+
+    .tab.active {
+      border-color: var(--green);
+      background: #17261f;
+      color: #f8fff9;
+    }
+
+    .screen {
+      display: none;
+      gap: 16px;
+      grid-template-columns: 1.2fr .8fr;
+      align-items: start;
+    }
+
+    .screen.active { display: grid; }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .action {
+      min-height: 96px;
+      background: var(--panel-2);
+    }
+
+    .action span {
+      display: block;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .action.danger {
+      border-color: #77343a;
+      background: #2a1619;
+      color: #fff4f4;
+    }
+
+    .action.good {
+      border-color: #2b6845;
+      background: #17251d;
+    }
+
+    .side-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      background: #141a20;
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .metric label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 24px;
+      margin-top: 6px;
+    }
+
+    .activity {
+      min-height: 132px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .activity strong { color: var(--text); }
+
+    .banner {
+      display: none;
+      margin-bottom: 16px;
+      border: 1px solid #7d3030;
+      background: #2b1515;
+      color: #fff0f0;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .banner.show { display: block; }
+
+    footer {
+      margin-top: 18px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 900px) {
+      header { flex-direction: column; align-items: stretch; }
+      .tabs { grid-template-columns: 1fr; }
+      .screen.active { grid-template-columns: 1fr; }
+      .actions { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Touchless Public Service Kiosk</h1>
+        <div class="tagline">A real-life demo surface for the AI Vision Controller. Use air-click or touch mode to operate hospital, classroom, smart home, emergency, and information services without touching the screen.</div>
+      </div>
+      <div class="status">
+        Live Demo State
+        <strong id="state">Ready</strong>
+      </div>
+    </header>
+
+    <div id="alert" class="banner">Emergency alert activated. Help request has been sent to the service desk.</div>
+
+    <nav class="tabs" aria-label="Kiosk sections">
+      <button class="tab active" data-screen="hospital">Hospital Help</button>
+      <button class="tab" data-screen="classroom">Classroom Control</button>
+      <button class="tab" data-screen="home">Smart Home</button>
+      <button class="tab" data-screen="emergency">Emergency Alert</button>
+      <button class="tab" data-screen="info">Information Desk</button>
+    </nav>
+
+    <section id="hospital" class="screen active">
+      <div class="panel">
+        <h2>Hospital Touchless Assistant</h2>
+        <p>Patients and visitors can request support, view schedules, and read instructions without touching a public kiosk screen.</p>
+        <div class="actions">
+          <button class="action good" data-action="Nurse requested">Call Nurse <span>Send a non-emergency support request.</span></button>
+          <button class="action danger" data-action="Emergency medical help requested" data-emergency="true">Emergency Help <span>Trigger an urgent support alert.</span></button>
+          <button class="action" data-action="Medicine schedule opened">Medicine Schedule <span>View timing and dosage reminders.</span></button>
+          <button class="action" data-action="Doctor timing opened">Doctor Timing <span>Check available consultation slots.</span></button>
+        </div>
+      </div>
+      <aside class="panel">
+        <h2>Patient Status</h2>
+        <div class="side-list">
+          <div class="metric"><label>Queue</label><strong>12 min</strong></div>
+          <div class="metric"><label>Department</label><strong>General OPD</strong></div>
+          <div class="metric"><label>Sanitization</label><strong>Touchless</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="classroom" class="screen">
+      <div class="panel">
+        <h2>Smart Classroom Controller</h2>
+        <p>Teachers can control slides, video playback, notes, and quizzes from a distance using only hand gestures.</p>
+        <div class="actions">
+          <button class="action" data-action="Next slide selected">Next Slide <span>Move presentation forward.</span></button>
+          <button class="action" data-action="Previous slide selected">Previous Slide <span>Move presentation backward.</span></button>
+          <button class="action good" data-action="Lecture playback toggled">Play / Pause Lecture <span>Control teaching video playback.</span></button>
+          <button class="action" data-action="Quiz started">Start Quiz <span>Launch interactive class activity.</span></button>
+        </div>
+      </div>
+      <aside class="panel">
+        <h2>Class Session</h2>
+        <div class="side-list">
+          <div class="metric"><label>Topic</label><strong>AI Vision</strong></div>
+          <div class="metric"><label>Slide</label><strong id="slide">04</strong></div>
+          <div class="metric"><label>Mode</label><strong>Hands-Free</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="home" class="screen">
+      <div class="panel">
+        <h2>Smart Home Panel</h2>
+        <p>Control home devices using a normal display and webcam, useful for accessibility and hygienic shared controls.</p>
+        <div class="actions">
+          <button class="action good" data-action="Lights toggled">Lights On / Off <span>Toggle room lighting.</span></button>
+          <button class="action" data-action="Fan speed increased">Fan Speed <span>Increase or adjust fan level.</span></button>
+          <button class="action" data-action="Door lock toggled">Door Lock <span>Lock or unlock the main door.</span></button>
+          <button class="action" data-action="AC temperature adjusted">AC Temperature <span>Adjust temperature setting.</span></button>
+        </div>
+      </div>
+      <aside class="panel">
+        <h2>Home Status</h2>
+        <div class="side-list">
+          <div class="metric"><label>Lights</label><strong id="lights">On</strong></div>
+          <div class="metric"><label>Fan</label><strong id="fan">Level 2</strong></div>
+          <div class="metric"><label>Door</label><strong id="door">Locked</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="emergency" class="screen">
+      <div class="panel">
+        <h2>Emergency Response Station</h2>
+        <p>A large, accessible alert screen for hospitals, campuses, labs, malls, and public service counters.</p>
+        <div class="actions">
+          <button class="action danger" data-action="Emergency SOS activated" data-emergency="true">Activate SOS <span>Send urgent alert to support desk.</span></button>
+          <button class="action" data-action="Security desk notified">Call Security <span>Notify local security team.</span></button>
+          <button class="action" data-action="Fire safety instructions opened">Fire Safety <span>Open evacuation instructions.</span></button>
+          <button class="action good" data-action="Alert reset">Reset Alert <span>Clear emergency display.</span></button>
+        </div>
+      </div>
+      <aside class="panel">
+        <h2>Response Data</h2>
+        <div class="side-list">
+          <div class="metric"><label>Priority</label><strong id="priority">Normal</strong></div>
+          <div class="metric"><label>Desk</label><strong>Admin Block</strong></div>
+          <div class="metric"><label>Status</label><strong id="response">Monitoring</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="info" class="screen">
+      <div class="panel">
+        <h2>Information Desk</h2>
+        <p>Visitors can get directions, timings, help desk information, and facility details without physical contact.</p>
+        <div class="actions">
+          <button class="action" data-action="Campus directions opened">Campus Directions <span>Show route to departments.</span></button>
+          <button class="action" data-action="Help desk information opened">Help Desk <span>View contact and support details.</span></button>
+          <button class="action" data-action="Event schedule opened">Event Schedule <span>View latest program timings.</span></button>
+          <button class="action" data-action="Accessibility services opened">Accessibility Services <span>Support for visitors with special needs.</span></button>
+        </div>
+      </div>
+      <aside class="panel">
+        <h2>Activity Log</h2>
+        <div id="activity" class="activity"><strong>Ready.</strong><br>Use your AI Vision Controller to select any kiosk service.</div>
+      </aside>
+    </section>
+
+    <footer>
+      Demo instructions: run <strong>python app.py</strong>, unlock with Face ID plus the secret index+pinky hand sign, switch to Navigation or Touch Mode, then use air-click or steady-finger touch to operate this kiosk.<br>
+      <strong>Copyright (C) 2026 Yashwant Sonkar and Project Team.</strong> Unauthorized copying, redistribution, or rebranding is prohibited.
+    </footer>
+  </main>
+
+  <script>
+    const tabs = [...document.querySelectorAll('.tab')];
+    const screens = [...document.querySelectorAll('.screen')];
+    const state = document.getElementById('state');
+    const alertBox = document.getElementById('alert');
+    const activity = document.getElementById('activity');
+    let clicks = 0;
+
+    function showScreen(id) {
+      tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.screen === id));
+      screens.forEach(screen => screen.classList.toggle('active', screen.id === id));
+      state.textContent = `${id[0].toUpperCase()}${id.slice(1)} Mode`;
+      log(`Opened ${state.textContent}.`);
+    }
+
+    function log(message) {
+      clicks += 1;
+      const time = new Date().toLocaleTimeString();
+      activity.innerHTML = `<strong>${message}</strong><br>${time} | Total kiosk actions: ${clicks}`;
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => showScreen(tab.dataset.screen));
+    });
+
+    document.querySelectorAll('[data-action]').forEach(button => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.action;
+        state.textContent = action;
+        log(action);
+
+        if (button.dataset.emergency === 'true') {
+          alertBox.classList.add('show');
+          document.getElementById('priority').textContent = 'Critical';
+          document.getElementById('response').textContent = 'Alert Sent';
+        }
+
+        if (action === 'Alert reset') {
+          alertBox.classList.remove('show');
+          document.getElementById('priority').textContent = 'Normal';
+          document.getElementById('response').textContent = 'Monitoring';
+        }
+
+        if (action === 'Next slide selected') {
+          const slide = document.getElementById('slide');
+          slide.textContent = String(Number(slide.textContent) + 1).padStart(2, '0');
+        }
+
+        if (action === 'Previous slide selected') {
+          const slide = document.getElementById('slide');
+          slide.textContent = String(Math.max(1, Number(slide.textContent) - 1)).padStart(2, '0');
+        }
+
+        if (action === 'Lights toggled') {
+          const lights = document.getElementById('lights');
+          lights.textContent = lights.textContent === 'On' ? 'Off' : 'On';
+        }
+
+        if (action === 'Fan speed increased') {
+          const fan = document.getElementById('fan');
+          const current = Number(fan.textContent.replace('Level ', ''));
+          fan.textContent = `Level ${current >= 5 ? 1 : current + 1}`;
+        }
+
+        if (action === 'Door lock toggled') {
+          const door = document.getElementById('door');
+          door.textContent = door.textContent === 'Locked' ? 'Unlocked' : 'Locked';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
